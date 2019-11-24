@@ -30,7 +30,6 @@ public class Lancamento {
 	@Column(name = "data_vencimento")
 	private LocalDate dataVencimento;
 	
-	@NotNull
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
 	
