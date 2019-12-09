@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 @ControllerAdvice
+/**
+ * Classe responsavel por retirar o refresh_token do corpo da requisicao no /oauth/token
+ * e criar um token
+ * @author Wellington
+ *
+ */
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken>{
 
 	@Override
@@ -31,20 +37,32 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 		
 		DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) body;
 		
-		String refreshToken = body.getRefreshToken().getValue();
+		String refreshToken = body.getRefreshToken().getValue(); // resgatando o valor do refresh_token
+		
+		// convertendo o request e o response
 		HttpServletRequest req = ((ServletServerHttpRequest) request).getServletRequest();
 		HttpServletResponse resp = ((ServletServerHttpResponse) response).getServletResponse();
 		
-		adicionarRefreshTokenNoCookie(refreshToken, req, resp);
-		removerRefreshTokenDoBody(token);
+		adicionarRefreshTokenNoCookie(refreshToken, req, resp); // criando o cookie
+		removerRefreshTokenDoBody(token); // removendo o refresh_token da requisicao
 		
 		return body;
 	}
 	
+	/**
+	 * Metodo criado para remover o refresh_token da requisicao 
+	 * @param token
+	 */
 	private void removerRefreshTokenDoBody(DefaultOAuth2AccessToken token) {
 		token.setRefreshToken(null);
 	}
 
+	/**
+	 * Atraves de uma requisicao repassada por parametro, o metodo cria um cookie
+	 * @param refreshToken
+	 * @param req
+	 * @param resp
+	 */
 	private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
 		Cookie refreshCookieToken = new Cookie("refreshToken", refreshToken);
 		refreshCookieToken.setHttpOnly(true);
