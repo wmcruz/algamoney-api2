@@ -2,13 +2,13 @@ package com.example.algamoney.api.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("algamoney")
 /**
  * Classe reponsavel por configurar propriedades para o sistema
  * Opções uteis para utilizar em ambiente locais e de produção
  * 
  * @author welyn
  */
+@ConfigurationProperties("algamoney")
 public class AlgamoneyApiProperty {
 	
 	// Atributos
