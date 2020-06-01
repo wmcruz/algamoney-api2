@@ -68,6 +68,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		return new JwtTokenStore(accessTokenConverter());
 	}
 	
+	@Bean
 	public TokenEnhancer tokenEnhancer() {
 		return new CustomTokenEnhancer();
 	}
