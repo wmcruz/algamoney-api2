@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
 import com.example.algamoney.api.model.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -48,6 +49,12 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public List<LancamentoEstatisticaCategoria> porCategoria() {
 		return this.lancamentoRepository.porCategoria(LocalDate.now());
+	}
+
+	@GetMapping("/estatisticas/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<LancamentoEstatisticaDia> porDia() {
+		return this.lancamentoRepository.porDia(LocalDate.now());
 	}
 	
 	@GetMapping
