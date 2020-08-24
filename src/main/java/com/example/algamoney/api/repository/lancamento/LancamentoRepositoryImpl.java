@@ -1,8 +1,18 @@
 package com.example.algamoney.api.repository.lancamento;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
+import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
+import com.example.algamoney.api.dto.LancamentoEstatisticaPessoa;
+import com.example.algamoney.api.model.Categoria_;
+import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Lancamento_;
+import com.example.algamoney.api.model.Pessoa_;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,20 +21,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
-import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.util.StringUtils;
-
-import com.example.algamoney.api.model.Categoria_;
-import com.example.algamoney.api.model.Lancamento;
-import com.example.algamoney.api.model.Lancamento_;
-import com.example.algamoney.api.model.Pessoa_;
-import com.example.algamoney.api.repository.filter.LancamentoFilter;
-import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 	
@@ -77,6 +76,35 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 				root.get(Lancamento_.dataVencimento));
 
 		TypedQuery<LancamentoEstatisticaDia> typedQuery = manager.createQuery(criteriaQuery);
+
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<LancamentoEstatisticaPessoa> porPessoa(LocalDate inicio, LocalDate fim) {
+		CriteriaBuilder criteriaBuilder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<LancamentoEstatisticaPessoa> criteriaQuery = criteriaBuilder.
+				createQuery(LancamentoEstatisticaPessoa.class);
+
+		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(LancamentoEstatisticaPessoa.class,
+				root.get(Lancamento_.tipo),
+				root.get(Lancamento_.pessoa),
+				criteriaBuilder.sum(root.get(Lancamento_.valor))));
+
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento),
+						inicio),
+				criteriaBuilder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento),
+						fim));
+
+		criteriaQuery.groupBy(root.get(Lancamento_.tipo),
+				root.get(Lancamento_.pessoa));
+
+		TypedQuery<LancamentoEstatisticaPessoa> typedQuery = manager
+				.createQuery(criteriaQuery);
 
 		return typedQuery.getResultList();
 	}
