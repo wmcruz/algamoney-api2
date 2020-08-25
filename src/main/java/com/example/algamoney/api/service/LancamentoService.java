@@ -13,6 +13,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -31,6 +32,12 @@ public class LancamentoService {
 	
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
+
+	// @Scheduled(fixedDelay = 1000 * 2)
+	// @Scheduled(cron = "40 55 22 * * *")
+	public void avisarSobreLancamentosVencidos() {
+		System.out.println(">>>>>>>>>>>> Método sendo executado....");
+	}
 
 	/**
 	 * Método para Salvar um Lancamento.
