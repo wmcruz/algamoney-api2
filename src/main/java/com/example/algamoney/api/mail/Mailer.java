@@ -1,10 +1,9 @@
 package com.example.algamoney.api.mail;
 
 import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Usuario;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,11 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class Mailer {
@@ -67,5 +70,16 @@ public class Mailer {
         } catch (MessagingException e) {
             throw new RuntimeException("Problemas com o envio de e-mail!", e);
         }
+    }
+
+    public void avisarLancamentosVencidos(List<Lancamento> vencidos, List<Usuario> destinatarios){
+        Map<String, Object> variaveis = new HashMap<>();
+        variaveis.put("lancamentos", vencidos);
+
+        List<String> emails = destinatarios.stream()
+                .map(u -> u.getEmail())
+                .collect(Collectors.toList());
+
+        this.enviarEmail("wellington.max1@gmail.com", emails, "Lançamentos Vencidos", "mail/aviso-lancamentos-vencidos", variaveis);
     }
 }
