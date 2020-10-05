@@ -89,11 +89,6 @@
 			<artifactId>hibernate-java8</artifactId>
 		</dependency>
 		
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-		</dependency>
-		
 		<!-- Suporte do Jackson para as datas do Java 8 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -159,7 +154,6 @@
 			    <artifactId>flyway-maven-plugin</artifactId>
 			    <version>3.2.1</version>
 			</plugin>
-
 		</plugins>
 	</build>
 
