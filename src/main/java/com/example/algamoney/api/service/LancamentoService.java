@@ -50,7 +50,7 @@ public class LancamentoService {
 
 	// @Scheduled(fixedDelay = 1000 * 2)
 	// @Scheduled(cron = "40 55 22 * * *")
-	@Scheduled(fixedDelay = 1000 * 60 * 30)
+	// @Scheduled(fixedDelay = 1000 * 60 * 30)
 	public void avisarSobreLancamentosVencidos() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("## Preparando o envio de e-mails de aviso de lançamentos vencidos");
