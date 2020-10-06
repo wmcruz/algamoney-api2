@@ -1,12 +1,11 @@
 package com.example.algamoney.api.service;
 
+import com.example.algamoney.api.model.Pessoa;
+import com.example.algamoney.api.repository.PessoaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-
-import com.example.algamoney.api.model.Pessoa;
-import com.example.algamoney.api.repository.PessoaRepository;
 
 @Service
 public class PessoaService {
@@ -17,6 +16,8 @@ public class PessoaService {
 	public Pessoa atualizar (Long codigo, Pessoa pessoa) {
 		
 		Pessoa pessoaSalva = buscaPessoaPeloCodigo(codigo);
+
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
 		
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo"); // caso positivo, o objeto de pessoa é copiado
 		
@@ -40,4 +41,10 @@ public class PessoaService {
 		
 		return pessoaSalva;
 	}
+
+    public Pessoa salvar(Pessoa pessoa) {
+		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
+
+		return pessoaRepository.save(pessoa);
+    }
 }
