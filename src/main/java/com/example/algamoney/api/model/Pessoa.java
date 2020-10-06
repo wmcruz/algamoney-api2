@@ -1,6 +1,7 @@
 package com.example.algamoney.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ public class Pessoa {
 	@Embedded
 	private Endereco endereco;
 
+	@JsonIgnoreProperties("pessoa")
 	@Valid
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private List<Contato> contatos;
