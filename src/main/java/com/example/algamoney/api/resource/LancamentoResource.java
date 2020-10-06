@@ -1,15 +1,15 @@
 package com.example.algamoney.api.resource;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import com.example.algamoney.api.dto.LancamentoEstatisticaCategoria;
 import com.example.algamoney.api.dto.LancamentoEstatisticaDia;
-import com.example.algamoney.api.model.Pessoa;
+import com.example.algamoney.api.event.RecursoCriadoEvent;
+import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
+import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
+import com.example.algamoney.api.service.LancamentoService;
+import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -23,15 +23,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.example.algamoney.api.event.RecursoCriadoEvent;
-import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
-import com.example.algamoney.api.model.Lancamento;
-import com.example.algamoney.api.repository.LancamentoRepository;
-import com.example.algamoney.api.repository.filter.LancamentoFilter;
-import com.example.algamoney.api.repository.projection.ResumoLancamento;
-import com.example.algamoney.api.service.LancamentoService;
-import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -127,5 +128,15 @@ public class LancamentoResource {
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
 		return ResponseEntity.badRequest().body(erros);
+	}
+
+	@PostMapping("/anexo")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	public String uploadAnexo(@RequestParam("anexo") MultipartFile anexo) throws IOException {
+		OutputStream outputStream = new FileOutputStream("d:\\desktop\\anexo\\anexo--" + anexo.getOriginalFilename());
+		outputStream.write(anexo.getBytes());
+		outputStream.close();
+
+		return "OK";
 	}
 }
