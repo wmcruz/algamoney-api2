@@ -16,10 +16,11 @@ public class PessoaService {
 	public Pessoa atualizar (Long codigo, Pessoa pessoa) {
 		
 		Pessoa pessoaSalva = buscaPessoaPeloCodigo(codigo);
+		pessoaSalva.getContatos().clear();
+		pessoaSalva.getContatos().addAll(pessoa.getContatos());
+		pessoaSalva.getContatos().forEach(c -> c.setPessoa(pessoaSalva));
 
-		pessoa.getContatos().forEach(c -> c.setPessoa(pessoa));
-		
-		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo"); // caso positivo, o objeto de pessoa é copiado
+		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo", "contatos"); // caso positivo, o objeto de pessoa é copiado
 		
 		return pessoaRepository.save(pessoaSalva); // pessoa é salva no BD
 	}
