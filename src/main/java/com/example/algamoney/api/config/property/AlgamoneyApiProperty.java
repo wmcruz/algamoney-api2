@@ -14,9 +14,12 @@ public class AlgamoneyApiProperty {
     // Atributos
     private String origemPermitida = "http://localhost:4200";
 
+    // instancias de classes
     private final Seguranca seguranca = new Seguranca();
 
     private final Mail mail = new Mail();
+
+    private final S3 s3 = new S3();
 
     //Getters and setters
     public Seguranca getSeguranca() {
@@ -35,6 +38,9 @@ public class AlgamoneyApiProperty {
         this.origemPermitida = origemPermitida;
     }
 
+    public S3 getS3() { return s3; }
+
+    // classes
     /**
      * Classe responsavel por acoplar opções de segurança
      *
@@ -50,6 +56,40 @@ public class AlgamoneyApiProperty {
 
         public void setEnableHttps(boolean enableHttps) {
             this.enableHttps = enableHttps;
+        }
+    }
+
+    /**
+     * Classe model para armazenar informações referente ao serviço da amazon s3
+     * @author Wellington
+     */
+    public static class S3 {
+        private String accessKeyId;
+        private String secretAccessKey;
+        private String bucket = "wmc-algamoney-arquivos";
+
+        public String getAccessKeyId() {
+            return accessKeyId;
+        }
+
+        public void setAccessKeyId(String accessKeyId) {
+            this.accessKeyId = accessKeyId;
+        }
+
+        public String getSecretAccessKey() {
+            return secretAccessKey;
+        }
+
+        public void setSecretAccessKey(String secretAccessKey) {
+            this.secretAccessKey = secretAccessKey;
+        }
+
+        public String getBucket() {
+            return bucket;
+        }
+
+        public void setBucket(String bucket) {
+            this.bucket = bucket;
         }
     }
 
