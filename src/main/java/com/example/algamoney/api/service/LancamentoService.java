@@ -9,6 +9,7 @@ import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.repository.UsuarioRepository;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+import com.example.algamoney.api.storage.S3;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -18,8 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.sql.Date;
@@ -47,6 +48,9 @@ public class LancamentoService {
 
 	@Autowired
 	private Mailer mailer;
+
+	@Autowired
+	private S3 s3;
 
 	// @Scheduled(fixedDelay = 1000 * 2)
 	// @Scheduled(cron = "40 55 22 * * *")
@@ -90,6 +94,10 @@ public class LancamentoService {
 		
 		if(pessoa == null || pessoa.isInativo()) {
 			throw new PessoaInexistenteOuInativaException();
+		}
+
+		if (StringUtils.hasText(lancamento.getAnexo())) {
+			this.s3.salvar(lancamento.getAnexo());
 		}
 		
 		return lancamentoRepository.save(lancamento);
