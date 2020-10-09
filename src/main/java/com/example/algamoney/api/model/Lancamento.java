@@ -46,6 +46,11 @@ public class Lancamento {
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;
 
+	private String anexo;
+
+	@Transient // anotacao que nao persiste no BD
+	private String urlAnexo;
+
 	@JsonIgnore
 	public boolean isReceita() {
 		return TipoLancamento.RECEITA.equals(this.tipo);
@@ -122,6 +127,22 @@ public class Lancamento {
 
 	public void setPessoa(Pessoa pessoa) {
 		this.pessoa = pessoa;
+	}
+
+	public String getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
+	}
+
+	public String getUrlAnexo() {
+		return urlAnexo;
+	}
+
+	public void setUrlAnexo(String urlAnexo) {
+		this.urlAnexo = urlAnexo;
 	}
 
 	// Hashcode and equals
