@@ -107,9 +107,20 @@ public class LancamentoService {
 	 * @return Lancamento
 	 */
 	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			validarPessoa(lancamento);
+		}
 
-		Lancamento lancamentoSalvo = this.buscaLancamentoPeloCodigo(codigo);
-		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo"); // caso positivo, o objeto lancamento é copiado
+		if (StringUtils.isEmpty(lancamento.getAnexo())
+				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
+			s3.remover(lancamentoSalvo.getAnexo());
+		} else if (StringUtils.hasLength(lancamento.getAnexo())
+				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
+			s3.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
+		}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
 
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
