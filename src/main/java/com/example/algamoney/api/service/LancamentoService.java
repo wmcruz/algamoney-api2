@@ -124,7 +124,9 @@ public class LancamentoService {
 			pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
 		}
 
-		return lancamento;
+		if (pessoa == null || pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
 	}
 
 	public  byte[] relatorioPorPessoa(LocalDate inicio, LocalDate fim) throws Exception {
