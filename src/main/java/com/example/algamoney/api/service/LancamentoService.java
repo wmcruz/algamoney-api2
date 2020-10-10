@@ -89,17 +89,13 @@ public class LancamentoService {
 	 * @return Lancamento
 	 */
 	public Lancamento salvar(Lancamento lancamento) {
-		
-		Pessoa pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
-		
-		if(pessoa == null || pessoa.isInativo()) {
-			throw new PessoaInexistenteOuInativaException();
-		}
+
+		validarPessoa(lancamento);
 
 		if (StringUtils.hasText(lancamento.getAnexo())) {
-			this.s3.salvar(lancamento.getAnexo());
+			s3.salvar(lancamento.getAnexo());
 		}
-		
+
 		return lancamentoRepository.save(lancamento);
 	}
 
