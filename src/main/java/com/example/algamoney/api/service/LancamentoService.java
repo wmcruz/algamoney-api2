@@ -118,17 +118,10 @@ public class LancamentoService {
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
 
-	/**
-	 * Método que pesquisa um lancamento pelo código
-	 * Caso não encontre, uma excessão é lançada.
-	 * @param codigo
-	 * @return Lancamento
-	 */
-	public Lancamento buscaLancamentoPeloCodigo(Long codigo) {
-		Lancamento lancamento = lancamentoRepository.findOne(codigo);
-
-		if(lancamento == null) {
-			throw new EmptyResultDataAccessException(1);
+	private void validarPessoa(Lancamento lancamento) {
+		Pessoa pessoa = null;
+		if (lancamento.getPessoa().getCodigo() != null) {
+			pessoa = pessoaRepository.findOne(lancamento.getPessoa().getCodigo());
 		}
 
 		return lancamento;
