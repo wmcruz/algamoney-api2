@@ -67,7 +67,7 @@ public class S3 {
     }
 
     public String configurarUrl(String objeto) {
-        return "\\" + property.getS3().getBucket() + ".s3.amazonaws.com/" + objeto;
+        return "\\\\" + property.getS3().getBucket() + ".s3.amazonaws.com/" + objeto;
     }
 
     public void salvar(String objeto) {
