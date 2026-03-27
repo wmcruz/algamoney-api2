@@ -26,7 +26,7 @@
 		<spring-security-oauth2.version>2.2.1.RELEASE</spring-security-oauth2.version>
 		<spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
 
-		<jasperreports.version>6.5.1</jasperreports.version>
+		<jasperreports.version>7.0.4</jasperreports.version>
 		<jasperreports-functions.version>6.5.1</jasperreports-functions.version>
 		<jasperreports-fonts.version>6.0.0</jasperreports-fonts.version>
 
